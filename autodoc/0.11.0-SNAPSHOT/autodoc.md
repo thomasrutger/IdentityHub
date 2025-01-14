@@ -14,18 +14,19 @@ _None_
 **Overview:** No overview provided.
 
 
-### Configuration_None_
+### Configuration
+
+| Key                      | Required | Type     | Default         | Pattern | Min | Max | Description |
+| ------------------------ | -------- | -------- | --------------- | ------- | --- | --- | ----------- |
+| `web.http.identity.port` | `*`      | `string` | `15151`         |         |     |     |             |
+| `web.http.identity.path` | `*`      | `string` | `/api/identity` |         |     |     |             |
 
 #### Provided services
 - `org.eclipse.edc.identityhub.spi.AuthorizationService`
 
 #### Referenced (injected) services
-- `org.eclipse.edc.web.spi.WebService` (required)
-- `org.eclipse.edc.identityhub.spi.participantcontext.ParticipantContextService` (required)
-- `org.eclipse.edc.web.spi.configuration.WebServiceConfigurer` (required)
-- `org.eclipse.edc.web.spi.WebServer` (required)
-- `org.eclipse.edc.spi.security.Vault` (required)
 - `org.eclipse.edc.spi.types.TypeManager` (required)
+- `org.eclipse.edc.web.spi.configuration.PortMappingRegistry` (required)
 - `org.eclipse.edc.spi.system.apiversion.ApiVersionService` (required)
 
 Module `credential-watchdog`
@@ -94,9 +95,9 @@ Module `did-spi`
 **Categories:** _None_
 
 ### Extension points
+  - `org.eclipse.edc.identithub.spi.did.DidWebParser`
   - `org.eclipse.edc.identithub.spi.did.store.DidResourceStore`
   - `org.eclipse.edc.identithub.spi.did.DidDocumentPublisher`
-  - `org.eclipse.edc.identithub.spi.did.DidWebParser`
 
 ### Extensions
 Module `identity-hub-core`
@@ -112,7 +113,8 @@ _None_
 #### Class: `org.eclipse.edc.identityhub.core.CoreServicesExtension`
 **Name:** "IdentityHub Core Services Extension"
 
-**Overview:** No overview provided.
+**Overview:**  This extension provides core services for the IdentityHub that are not intended to be user-replaceable.
+
 
 
 ### Configuration_None_
@@ -148,7 +150,8 @@ _None_
 #### Class: `org.eclipse.edc.identityhub.DefaultServicesExtension`
 **Name:** "IdentityHub Default Services Extension"
 
-**Overview:** No overview provided.
+**Overview:**  This extension provides core services for the IdentityHub that are not intended to be user-replaceable.
+
 
 
 ### Configuration
@@ -521,7 +524,12 @@ _None_
 **Overview:** No overview provided.
 
 
-### Configuration_None_
+### Configuration
+
+| Key                 | Required | Type     | Default | Pattern | Min | Max | Description |
+| ------------------- | -------- | -------- | ------- | ------- | --- | --- | ----------- |
+| `web.http.did.port` | `*`      | `string` | `10100` |         |     |     |             |
+| `web.http.did.path` | `*`      | `string` | `/`     |         |     |     |             |
 
 #### Provided services
 - `org.eclipse.edc.identithub.spi.did.events.DidDocumentObservable`
@@ -530,8 +538,7 @@ _None_
 - `org.eclipse.edc.identithub.spi.did.DidDocumentPublisherRegistry` (required)
 - `org.eclipse.edc.identithub.spi.did.store.DidResourceStore` (required)
 - `org.eclipse.edc.web.spi.WebService` (required)
-- `org.eclipse.edc.web.spi.configuration.WebServiceConfigurer` (required)
-- `org.eclipse.edc.web.spi.WebServer` (required)
+- `org.eclipse.edc.web.spi.configuration.PortMappingRegistry` (required)
 - `org.eclipse.edc.identithub.spi.did.DidWebParser` (optional)
 - `java.time.Clock` (required)
 - `org.eclipse.edc.spi.event.EventRouter` (required)
@@ -579,7 +586,12 @@ _None_
 **Overview:** No overview provided.
 
 
-### Configuration_None_
+### Configuration
+
+| Key                          | Required | Type     | Default             | Pattern | Min | Max | Description |
+| ---------------------------- | -------- | -------- | ------------------- | ------- | --- | --- | ----------- |
+| `web.http.presentation.port` | `*`      | `string` | `13131`             |         |     |     |             |
+| `web.http.presentation.path` | `*`      | `string` | `/api/presentation` |         |     |     |             |
 
 #### Provided services
 _None_
@@ -595,6 +607,7 @@ _None_
 - `org.eclipse.edc.spi.types.TypeManager` (required)
 - `org.eclipse.edc.identityhub.spi.participantcontext.ParticipantContextService` (required)
 - `org.eclipse.edc.spi.system.apiversion.ApiVersionService` (required)
+- `org.eclipse.edc.web.spi.configuration.PortMappingRegistry` (required)
 
 Module `sts-account-provisioner`
 --------------------------------
