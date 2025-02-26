@@ -500,6 +500,137 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ApiErrorDetail"
+  /v1alpha/participants/{participantContextId}/credentials/request:
+    post:
+      tags:
+      - Verifiable Credentials
+      description: Triggers a credential request that is send to the issuer via the
+        DCP protocol.
+      operationId: requestCredential
+      parameters:
+      - name: participantContextId
+        in: path
+        description: Base64-Url encode Participant Context ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: participantContextId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CredentialRequestDto"
+      responses:
+        "201":
+          description: The request was processed and sent to the issuer. The issuer-created
+            ID ("issuerPid") is returned in the response.
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: "Request body was malformed, or the request could not be processed"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "403":
+          description: "The request could not be completed, because either the authentication\
+            \ was missing or was not valid."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "409":
+          description: "Could not create a credential request, because a credential\
+            \ request with that ID already exists"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v1alpha/participants/{participantContextId}/credentials/request/{holderPid}:
+    get:
+      tags:
+      - Verifiable Credentials
+      description: Finds a credential request by ID.
+      operationId: getCredentialRequest
+      parameters:
+      - name: participantContextId
+        in: path
+        description: Base64-Url encode Participant Context ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: issuerPid
+        in: path
+        description: The issuer-assigned ID of the issuance process
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: participantContextId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: holderPid
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The VerifiableCredential.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifiableCredentialResource"
+        "400":
+          description: "Request body was malformed, or the request could not be processed"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "403":
+          description: "The request could not be completed, because either the authentication\
+            \ was missing or was not valid."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "404":
+          description: A VerifiableCredential with the given ID does not exist.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v1alpha/participants/{participantContextId}/credentials/{credentialId}:
     get:
       tags:
@@ -1509,6 +1640,34 @@ components:
           type: string
         clientSecret:
           type: string
+    CredentialDescriptor:
+      type: object
+      properties:
+        credentialType:
+          type: string
+        format:
+          type: string
+    CredentialRequestDto:
+      required:
+      - credentials
+      - issuerDid
+      type: object
+      properties:
+        credentials:
+          type: array
+          items:
+            $ref: "#/components/schemas/CredentialDescriptor"
+        holderPid:
+          type: string
+        issuerDid:
+          type: string
+    CredentialSchema:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
     CredentialStatus:
       type: object
       properties:
@@ -1516,6 +1675,7 @@ components:
           type: object
           additionalProperties:
             type: object
+          writeOnly: true
         id:
           type: string
         type:
@@ -1569,6 +1729,25 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Constraint"
+    HolderCredentialRequestDto:
+      type: object
+      properties:
+        credentialIds:
+          type: array
+          items:
+            type: string
+        holderPid:
+          type: string
+        issuerDid:
+          type: string
+        issuerPid:
+          type: string
+        status:
+          type: string
+        typesAndFormats:
+          type: object
+          additionalProperties:
+            type: string
     Issuer:
       type: object
       properties:
@@ -1647,6 +1826,10 @@ components:
           format: int64
         participantContextId:
           type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: object
         roles:
           type: array
           items:
@@ -1773,6 +1956,10 @@ components:
     VerifiableCredential:
       type: object
       properties:
+        credentialSchema:
+          type: array
+          items:
+            $ref: "#/components/schemas/CredentialSchema"
         credentialStatus:
           type: array
           items:
